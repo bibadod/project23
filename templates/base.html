@@ -5,23 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}MyStore{% endblock %}</title>
   <style>
-    :root { --primary: #7554d9; --bg: #f9f8fc; --card-bg: #ffffff; --border-color: #e8e5ef; }
-    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; background: var(--bg); color: #222; }
+    :root { 
+      --primary: #7554d9; 
+      --bg: #f9f8fc; 
+      --card-bg: #ffffff; 
+      --border-color: #e8e5ef; 
+      --text-main: #222222;
+      --text-muted: #666666;
+    }
+    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; background: var(--bg); color: var(--text-main); }
     header { background: #fff; border-bottom: 1px solid var(--border-color); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
     header a { text-decoration: none; color: #222; font-weight: bold; }
-    nav a { margin-left: 15px; color: #555; text-decoration: none; }
-    main { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    nav a { margin-left: 15px; color: #555; text-decoration: none; font-size: 14px; }
+    main { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
     .purple-dot { color: var(--primary); }
-    .button { background: var(--primary); color: #fff; padding: 10px 18px; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; display: inline-block; }
-    .button-full { width: 100%; box-sizing: border-box; text-align: center; }
-    .outline-button { border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 8px; text-decoration: none; color: #333; }
-    .alert-error { background: #ffebeb; color: #c00; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; }
+    .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 8px; }
+    .muted { color: var(--text-muted); font-size: 14px; }
+    
+    /* Кнопки */
+    .button { background: var(--primary); color: #fff; padding: 12px 20px; border-radius: 10px; text-decoration: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+    .button:hover { opacity: 0.9; }
+    .button-full { width: 100%; box-sizing: border-box; justify-content: center; }
+    .outline-button { border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 10px; text-decoration: none; color: #333; font-weight: 600; font-size: 14px; background: #fff; display: inline-block; }
+    
+    /* Ошибки и формы */
+    .alert-error { background: #ffebeb; color: #c00; padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
     .form-stack { display: flex; flex-direction: column; gap: 12px; }
-    .form-stack input, .form-stack textarea { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font: inherit; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
-    .product-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; }
+    .form-stack input, .form-stack textarea { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font: inherit; background: #fff; }
+    
+    /* Сетка категорий (исправление твоего бага со строкой) */
+    .category-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
+    .category-tile { background: #fff; border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s; }
+    .category-tile:hover { border-color: var(--primary); }
+    .category-icon { font-size: 18px; color: var(--primary); background: #f6f2ff; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; }
+    .category-tile strong { display: block; font-size: 14px; }
+    .category-tile small { color: var(--text-muted); font-size: 12px; }
+
+    /* Герой-секция и сетка товаров */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 40px 0; }
+    .hero h1 { font-size: 42px; line-height: 1.1; margin: 0 0 15px 0; }
+    .hero h1 em { font-style: normal; color: var(--primary); }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+    .product-card { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; }
     .product-picture img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; }
-    .image-placeholder { height: 160px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; }
+    .image-placeholder { height: 160px; background: #f0edf6; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); gap: 4px; }
+    .product-card-body { margin-top: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-card h3 a { text-decoration: none; color: var(--text-main); font-size: 16px; }
+    .product-card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px; }
+    .price { font-size: 18px; font-weight: 700; }
+    .add-button { background: #f6f2ff; color: var(--primary); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; text-decoration: none; font-weight: bold; }
+    
+    /* Состояние пустого списка */
+    .empty-state { text-align: center; padding: 50px 20px; background: #fff; border: 1px solid var(--border-color); border-radius: 16px; margin-top: 20px; }
+    .empty-icon { font-size: 32px; color: var(--primary); margin-bottom: 10px; }
   </style>
 </head>
 <body>
@@ -29,7 +65,7 @@
     <a href="{{ url_for('products') }}">MY<span class="purple-dot">STORE</span></a>
     <nav>
       {% if session.get('username') %}
-        <a href="{{ url_for('products') }}">Товары</a>
+        <a href="{{ url_for('products') }}">Каталог</a>
         <a href="{{ url_for('cart') }}">Корзина</a>
         <a href="{{ url_for('get_products') }}">Добавить товар</a>
         <a href="{{ url_for('logout') }}">Выйти ({{ session['username'] }})</a>
