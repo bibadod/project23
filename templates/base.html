@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MyStore{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="announcement">A better way to shop. <strong>Discover something great today.</strong></div>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('products') if session.get('username') else url_for('login') }}">my<span>store</span><i>.</i></a>
+    <form class="search-form" action="{{ url_for('products') }}" method="get">
+      <span aria-hidden="true">⌕</span>
+      <input type="search" name="search" value="{{ search|default('') }}" placeholder="Search products, categories..." aria-label="Search products">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="header-actions" aria-label="Main navigation">
+      {% if session.get('username') %}
+        <a href="{{ url_for('products') }}">Shop</a>
+        <a href="{{ url_for('cart') }}" class="cart-link">Cart <span class="cart-dot">●</span></a>
+        <span class="user-greeting">Hi, {{ session.get('username') }}</span>
+        <a class="text-link" href="{{ url_for('logout') }}">Log out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Sign in</a>
+        <a class="button button-small" href="{{ url_for('register') }}">Create account</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="page-shell">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <a class="brand brand-footer" href="{{ url_for('products') if session.get('username') else url_for('login') }}">my<span>store</span><i>.</i></a>
+    <p>Good finds. Simple shopping.</p>
+    <span>© {{ 2026 }} MyStore. All rights reserved.</span>
+  </footer>
+</body>
+</html>

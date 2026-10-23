@@ -1,0 +1,275 @@
+```html
+{% extends "base.html" %}
+{% block title %}Secure Checkout · MyStore{% endblock %}
+
+{% block content %}
+<div class="page-intro">
+  <span class="eyebrow">MY STORE CHECKOUT</span>
+  <h1>Secure checkout<span class="purple-dot">.</span></h1>
+  <p class="muted">Choose your preferred payment method.</p>
+</div>
+
+<div class="checkout-layout">
+  <section class="checkout-card">
+    <h2>Payment method</h2>
+
+    <div class="payment-methods">
+      <button type="button" class="payment-option active"
+              id="card-option" onclick="selectPayment('card')">
+        💳 &nbsp; Credit or debit card
+      </button>
+      <button type="button" class="payment-option"
+              id="apple-option" onclick="selectPayment('apple')">
+        <span class="apple-logo">●</span> Apple Pay
+      </button>
+    </div>
+
+    <form method="post" action="{{ url_for('buy') }}" id="payment-form">
+      {% if products is defined %}
+        {% for item in products %}
+          <input type="hidden" name="card_id"
+                 value="{{ item.product.id }}">
+        {% endfor %}
+      {% elif product %}
+        <input type="hidden" name="card_id" value="{{ product.id }}">
+      {% endif %}
+
+      <input type="hidden" name="payment_method"
+             id="payment-method" value="card">
+
+      <div id="card-fields">
+        <label for="cardholder">Cardholder name</label>
+        <input id="cardholder" type="text"
+               placeholder="Alex Morgan" autocomplete="cc-name">
+
+        <label for="card-number">Card number</label>
+        <input id="card-number" type="text"
+               placeholder="4242 4242 4242 4242"
+               inputmode="numeric" autocomplete="cc-number"
+               maxlength="23">
+
+        <div class="form-row">
+          <div>
+            <label for="expiry">Expiry date</label>
+            <input id="expiry" type="text" placeholder="MM/YY"
+                   autocomplete="cc-exp" maxlength="5">
+          </div>
+          <div>
+            <label for="cvv">Security code</label>
+            <input id="cvv" type="password" placeholder="123"
+                   inputmode="numeric" autocomplete="cc-csc"
+                   maxlength="4">
+          </div>
+        </div>
+
+        <p class="muted demo-caption">
+          Demonstration only. Use fictional test details.
+          This form does not process payments.
+        </p>
+      </div>
+
+      <div id="apple-fields" hidden>
+        <div class="apple-pay-panel">
+          <div class="apple-pay-icon">●</div>
+          <h3>Pay with Apple Pay</h3>
+          <p>This is a visual demo. Apple Pay is not connected
+             to a payment processor.</p>
+        </div>
+      </div>
+
+      <button class="button button-full" type="submit">
+        <span id="pay-label">Review demo payment</span>
+        <span>→</span>
+      </button>
+    </form>
+
+    <a class="back-link" href="{{ url_for('cart') }}">
+      ← Return to cart
+    </a>
+  </section>
+
+  <aside class="order-summary">
+    <h2>Order summary</h2>
+
+    {% if products is defined %}
+      {% for item in products %}
+      <div class="summary-line">
+        <span>{{ item.product.name }} × {{ item.quantity }}</span>
+        <strong>
+          £{{ '%.2f'|format(item.product.price * item.quantity) }}
+        </strong>
+      </div>
+      {% endfor %}
+      {% set checkout_total = total %}
+    {% elif product %}
+      <div class="summary-line">
+        <span>{{ product.name }}</span>
+        <strong>£{{ '%.2f'|format(product.price) }}</strong>
+      </div>
+      {% set checkout_total = product.price %}
+    {% else %}
+      {% set checkout_total = 0 %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+
+    <div class="summary-line">
+      <span>Shipping</span>
+      <span class="free-label">Not calculated</span>
+    </div>
+
+    <div class="summary-divider"></div>
+
+    <div class="summary-total">
+      <span>Total</span>
+      <strong>£{{ '%.2f'|format(checkout_total) }}</strong>
+    </div>
+
+    <div class="secure-note">
+      🔒 &nbsp; Demo checkout · No real charges
+    </div>
+  </aside>
+</div>
+
+<style>
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.checkout-card, .order-summary {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e8e5ef);
+  border-radius: 20px;
+  padding: 28px;
+}
+.checkout-card h2, .order-summary h2 {
+  margin-top: 0;
+  margin-bottom: 22px;
+}
+.payment-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.payment-option {
+  min-height: 54px;
+  border: 1px solid #ded9e9;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+.payment-option.active {
+  border: 2px solid #7554d9;
+  background: #f6f2ff;
+}
+.checkout-card label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 17px 0 8px;
+}
+.checkout-card input:not([type="hidden"]) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #dcd8e5;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.checkout-card input:focus {
+  outline: 2px solid #a58bea;
+  outline-offset: 1px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.demo-caption {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 18px 0;
+}
+.apple-pay-panel {
+  text-align: center;
+  border: 1px solid #e5e1eb;
+  border-radius: 14px;
+  padding: 24px 16px;
+  margin-bottom: 22px;
+}
+.apple-pay-icon {
+  background: #111;
+  color: white;
+  border-radius: 12px;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  font-size: 25px;
+}
+.apple-pay-panel p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #777;
+}
+.summary-line, .summary-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0;
+}
+.summary-line strong, .summary-total strong {
+  text-align: right;
+}
+.summary-divider {
+  border-top: 1px solid #e8e5ef;
+  margin: 20px 0;
+}
+.summary-total {
+  font-size: 19px;
+  font-weight: 700;
+}
+.secure-note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #777;
+}
+.back-link {
+  display: inline-block;
+  margin-top: 22px;
+}
+@media (max-width: 700px) {
+  .checkout-layout { grid-template-columns: 1fr; }
+  .checkout-card, .order-summary { padding: 20px; }
+}
+</style>
+
+<script>
+function selectPayment(method) {
+  const card = method === 'card';
+
+  document.getElementById('card-option').classList.toggle('active', card);
+  document.getElementById('apple-option').classList.toggle('active', !card);
+  document.getElementById('card-fields').hidden = !card;
+  document.getElementById('apple-fields').hidden = card;
+  document.getElementById('payment-method').value = method;
+
+  document.getElementById('pay-label').textContent =
+    card ? 'Review demo payment' : 'Continue with Apple Pay demo';
+}
+
+document.getElementById('payment-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  alert('Demo only: no payment was processed and no order was placed.');
+});
+</script>
+{% endblock %}
+```

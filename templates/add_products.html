@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Add a product · MyStore{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">STORE MANAGEMENT</span><h1>Add a product<span class="purple-dot">.</span></h1><p class="muted">Add the details below to put a new product in your store.</p></div>
+<section class="editor-layout">
+  <form class="editor-card form-stack" action="{{ url_for('get_products') }}" method="post">
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <div class="form-section-title"><span>01</span><div><h2>Product information</h2><p>Give your product a clear name and description.</p></div></div>
+    <label for="name">Product name <span class="required">*</span></label>
+    <input id="name" name="name" type="text" maxlength="100" placeholder="e.g. Everyday Wireless Headphones" required>
+    <div class="form-two-columns">
+      <div><label for="price">Price (£) <span class="required">*</span></label><input id="price" name="price" type="number" min="0" step="0.01" placeholder="49.99" required></div>
+      <div><label for="rating">Rating (0–5)</label><input id="rating" name="rating" type="number" min="0" max="5" step="0.1" placeholder="4.5"></div>
+    </div>
+    <label for="category">Category</label><input id="category" name="category" type="text" maxlength="100" placeholder="e.g. Electronics">
+    <label for="image">Image URL</label><input id="image" name="image" type="url" maxlength="255" placeholder="https://example.com/product.jpg">
+    <label for="description">Description</label><textarea id="description" name="description" rows="5" placeholder="What makes this product worth discovering?"></textarea>
+    <div class="form-actions"><a class="outline-button" href="{{ url_for('products') }}">Cancel</a><button class="button" type="submit">Save product <span>→</span></button></div>
+  </form>
+  <aside class="editor-tip"><div class="tip-icon">✦</div><h3>A little tip</h3><p>Clear product names, helpful descriptions and good images make it easier for shoppers to find what they're looking for.</p><div class="tip-divider"></div><span class="eyebrow">QUICK CHECKLIST</span><p>✓ &nbsp; Check the product name</p><p>✓ &nbsp; Enter the price in pounds</p><p>✓ &nbsp; Use a valid image URL</p></aside>
+</section>
+{% endblock %}

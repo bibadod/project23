@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} · MyStore{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="{{ url_for('products') }}">Shop</a><span>/</span><span>{{ product.name }}</span></div>
+<section class="detail-layout">
+  <div class="detail-image">
+    {% if product.image %}<img src="{{ product.image }}" alt="{{ product.name }}">
+    {% else %}<div class="image-placeholder detail-placeholder"><span>✦</span><small>MY<span>STORE</span></small></div>{% endif %}
+  </div>
+  <div class="detail-info">
+    <span class="eyebrow">{{ product.category or 'EVERYDAY ESSENTIALS' }}</span>
+    <h1>{{ product.name }}</h1>
+    {% if product.rating %}<div class="rating detail-rating"><span>★★★★★</span> <small>{{ '%.1f'|format(product.rating) }} out of 5</small></div>{% endif %}
+    <div class="detail-price">£{{ '%.2f'|format(product.price) }}</div>
+    <p class="detail-description">{{ product.description or 'A great addition to your everyday. Simple, useful and ready to become a new favourite.' }}</p>
+    <div class="availability"><span></span> Available to add to your cart</div>
+    <a class="button button-full detail-add" href="{{ url_for('add_to_cart', product_id=product.id) }}">Add to cart <span>＋</span></a>
+    <a class="back-link" href="{{ url_for('products') }}">← Back to all products</a>
+  </div>
+</section>
+{% endblock %}

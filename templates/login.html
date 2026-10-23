@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sign in · MyStore{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-art">
+    <div class="art-label">YOUR EVERYDAY STORE</div>
+    <div class="art-orb orb-one"></div><div class="art-orb orb-two"></div>
+    <div class="art-copy"><span class="eyebrow">A LITTLE SOMETHING FOR YOU</span><h1>Good things<br>are waiting.</h1><p>Find useful essentials, thoughtful picks and new favourites.</p></div>
+    <div class="art-sticker">✦ Curated for you</div>
+  </div>
+  <div class="auth-panel">
+    <span class="eyebrow">WELCOME BACK</span>
+    <h2>Sign in to MyStore</h2>
+    <p class="muted">Enter your details to continue shopping.</p>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="post" action="{{ url_for('login') }}" class="form-stack">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" placeholder="Your username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+      <button class="button button-full" type="submit">Sign in <span>→</span></button>
+    </form>
+    <p class="auth-switch">New to MyStore? <a href="{{ url_for('register') }}">Create an account</a></p>
+  </div>
+</section>
+{% endblock %}

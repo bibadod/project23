@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Your cart · MyStore{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR SELECTION</span><h1>Your shopping cart<span class="purple-dot">.</span></h1><p class="muted">The good stuff you've picked out.</p></div>
+{% if products %}
+<div class="cart-layout">
+  <section class="cart-items">
+    <div class="cart-list-heading"><span>PRODUCT</span><span>QUANTITY</span><span>SUBTOTAL</span></div>
+    {% for item in products %}
+    <article class="cart-item">
+      <a class="cart-product-image" href="{{ url_for('product_details', product_id=item.product.id) }}">
+        {% if item.product.image %}<img src="{{ item.product.image }}" alt="{{ item.product.name }}">
+        {% else %}<span>✦</span>{% endif %}
+      </a>
+      <div class="cart-product-info"><a href="{{ url_for('product_details', product_id=item.product.id) }}"><h3>{{ item.product.name }}</h3></a><p>{{ item.product.category or 'Everyday essentials' }}</p><span class="cart-unit-price">£{{ '%.2f'|format(item.product.price) }} each</span></div>
+      <div class="quantity-pill">{{ item.quantity }}</div>
+      <strong class="cart-subtotal">£{{ '%.2f'|format(item.product.price * item.quantity) }}</strong>
+    </article>
+    {% endfor %}
+    <a class="back-link continue-link" href="{{ url_for('products') }}">← Continue shopping</a>
+  </section>
+  <aside class="order-summary">
+    <h2>Order summary</h2>
+    <div class="summary-line"><span>Subtotal</span><strong>£{{ '%.2f'|format(total) }}</strong></div>
+    <div class="summary-line"><span>Shipping</span><span class="free-label">Calculated at checkout</span></div>
+    <div class="summary-divider"></div>
+    <div class="summary-total"><span>Total</span><strong>£{{ '%.2f'|format(total) }}</strong></div>
+    <p class="summary-note">Taxes and delivery details can be confirmed before payment.</p>
+    <form action="{{ url_for('buy') }}" method="post">
+      {% for item in products %}<input type="hidden" name="card_id" value="{{ item.product.id }}">{% endfor %}
+      <button class="button button-full" type="submit">Continue to checkout <span>→</span></button>
+    </form>
+    <div class="secure-note">♧ &nbsp; A simple, secure checkout experience</div>
+  </aside>
+</div>
+{% else %}
+<div class="empty-state cart-empty"><div class="empty-icon">♡</div><h3>Your cart is taking a little break</h3><p>Looks like you haven't added anything just yet.</p><a class="button" href="{{ url_for('products') }}">Discover products <span>→</span></a></div>
+{% endif %}
+{% endblock %}

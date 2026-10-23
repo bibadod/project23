@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Create account · MyStore{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-art">
+    <div class="art-label">YOUR NEXT FAVOURITE THING</div>
+    <div class="art-orb orb-one"></div><div class="art-orb orb-two"></div>
+    <div class="art-copy"><span class="eyebrow">WELCOME TO THE GOOD STUFF</span><h1>Make room<br>for better finds.</h1><p>Create an account and make your next shopping trip a little easier.</p></div>
+    <div class="art-sticker">✦ You're in good company</div>
+  </div>
+  <div class="auth-panel">
+    <span class="eyebrow">GET STARTED</span>
+    <h2>Create your account</h2>
+    <p class="muted">It only takes a moment.</p>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="post" action="{{ url_for('register') }}" class="form-stack">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" minlength="3" maxlength="100" placeholder="Choose a username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+      <button class="button button-full" type="submit">Create account <span>→</span></button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

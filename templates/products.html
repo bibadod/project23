@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Shop · MyStore{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <span class="eyebrow">THE EVERYDAY EDIT</span>
+    <h1>Find your next<br><em>favourite.</em></h1>
+    <p>Thoughtful picks, everyday essentials and little upgrades that make a difference.</p>
+    <a class="button" href="#product-list">Explore products <span>↓</span></a>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-circle"></div>
+    <div class="floating-card card-top"><span>✦</span><div><strong>Good choice</strong><small>Something just for you</small></div></div>
+    <div class="hero-symbol">M.</div>
+    <div class="floating-card card-bottom"><span class="tiny-star">★★★★★</span><strong>Made for everyday</strong></div>
+  </div>
+</section>
+
+<section class="category-row">
+  <a href="{{ url_for('products') }}" class="category-tile"><span class="category-icon">✧</span><span><strong>Everything</strong><small>Explore the collection</small></span></a>
+  <a href="{{ url_for('products', search='electronics') }}" class="category-tile"><span class="category-icon">⌁</span><span><strong>Electronics</strong><small>Smart everyday tech</small></span></a>
+  <a href="{{ url_for('products', search='fashion') }}" class="category-tile"><span class="category-icon">◇</span><span><strong>Fashion</strong><small>Find your style</small></span></a>
+  <a href="{{ url_for('products', search='home') }}" class="category-tile"><span class="category-icon">⌂</span><span><strong>Home & living</strong><small>Make yourself at home</small></span></a>
+</section>
+
+<section id="product-list" class="products-section">
+  <div class="section-heading">
+    <div><span class="eyebrow">{% if search %}SEARCH RESULTS{% else %}HANDPICKED FOR YOU{% endif %}</span><h2>{% if search %}Results for “{{ search }}”{% else %}Popular picks<span class="purple-dot">.</span>{% endif %}</h2><p class="muted">{% if products %}{{ products|length }} product{% if products|length != 1 %}s{% endif %} to explore{% else %}Your next favourite might be just around the corner.{% endif %}</p></div>
+    {% if session.get('username') %}<a class="outline-button" href="{{ url_for('get_products') }}">＋ Add a product</a>{% endif %}
+  </div>
+  {% if products %}
+  <div class="product-grid">
+    {% for product in products %}
+    <article class="product-card">
+      <a class="product-picture" href="{{ url_for('product_details', product_id=product.id) }}">
+        {% if product.image %}<img src="{{ product.image }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}<div class="image-placeholder"><span>✦</span><small>MY<span>STORE</span></small></div>{% endif %}
+        {% if loop.index <= 2 %}<span class="product-badge">{% if loop.index == 1 %}POPULAR{% else %}JUST IN{% endif %}</span>{% endif %}
+      </a>
+      <div class="product-card-body">
+        <p class="product-category">{{ product.category or 'EVERYDAY ESSENTIALS' }}</p>
+        <h3><a href="{{ url_for('product_details', product_id=product.id) }}">{{ product.name }}</a></h3>
+        {% if product.rating %}<div class="rating"><span>★★★★★</span> <small>{{ '%.1f'|format(product.rating) }}/5</small></div>{% else %}<div class="rating rating-muted">A little something special</div>{% endif %}
+        <div class="product-card-bottom"><strong class="price">£{{ '%.2f'|format(product.price) }}</strong><a class="add-button" href="{{ url_for('add_to_cart', product_id=product.id) }}" aria-label="Add {{ product.name }} to cart">＋</a></div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">⌕</div><h3>No products found</h3><p>Try another search, or browse the full collection.</p><a class="button" href="{{ url_for('products') }}">View all products</a></div>
+  {% endif %}
+</section>
+{% endblock %}
